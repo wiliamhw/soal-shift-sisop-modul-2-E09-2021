@@ -12,7 +12,7 @@ void downloadExtract();
 DIR *getDir(char *basePath);
 void deleteFolder(char *basePath, DIR *dir, bool deleteFile);
 void categorize(DIR *dir);
-void command(char *command, char *path);
+void command(const char *command, char *path);
 /* Command list:
     * download
     * extract
@@ -44,7 +44,7 @@ int main()
     return 0;
 }
 
-void command(char *command, char *path)
+void command(const char *command, char *path)
 {
     int status;
     pid_t child_id;
@@ -73,14 +73,20 @@ void command(char *command, char *path)
             char *argv[] = {"cp", "-r", "/home/frain8/log", path, NULL};
             execv("/bin/cp", argv);
         }
-        else if (strcmp(command, "move") == 0) {
+        else if (strcmp(command, "move") == 0 || strcmp(command, "copy") == 0 ) {
             // Parse data in path
             char arr[2][50];
             strcpy(arr[0], strtok(path, "|"));
             strcpy(arr[1], strtok(NULL, "|"));
 
-            char *argv[] = {"mv", arr[0], arr[1], NULL};
-            execv("/bin/mv", argv);
+            if (strcmp(command, "move") == 0) {
+                char *argv[] = {"mv", arr[0], arr[1], NULL};
+                execv("/bin/mv", argv);
+            }
+            else {
+                char *argv[] = {"cp", arr[0], arr[1], NULL};
+                execv("/bin/cp", argv);
+            }
         }
         else {
             printf("Unrecognized command\n");
@@ -122,8 +128,9 @@ void deleteFolder(char *basePath, DIR *dir, bool deleteFile)
 void categorize(DIR *dir)
 {
     char *basePath = ".";
-    char path[1000], data[257];
+    char path[1000], data[307], filename[100], name[50], type[50];
     struct dirent *dc;
+    
     while ((dc = readdir(dir)) != NULL) {
         if (strcmp(dc->d_name, ".") != 0 && strcmp(dc->d_name, "..") != 0) {
             // Construct new path from the base path
@@ -132,23 +139,29 @@ void categorize(DIR *dir)
             if (!isRegularFile(path)) {
                 continue;
             }
-
-            // Initialize filename and its type
-            char filename[sizeof(dc->d_name)];
             strcpy(filename, dc->d_name);
-            char *type = strtok(dc->d_name, ";");
-            char *name = strtok(NULL, ";");
 
-            // Change filename to name
-            strcat(name, ".jpg");
-            sprintf(data, "%s|%s", filename, name);
-            command("move", data);
+            // Get every animal in a photo
+            char *save1, *save2;
+            char *animal = strtok_r(filename, "_", &save1);
+            while (animal) {
+                strcpy(type, strtok_r(animal, ";", &save2));
+                strcpy(name, strtok_r(NULL, ";", &save2));
 
-            // Move file to its appropriate folder
-            DIR *target = getDir(type);
-            sprintf(data, "%s|%s", name, type);
-            command("move", data);
-            closedir(target);
+                // Copy filename to name
+                strcat(name, ".jpg");
+                sprintf(data, "%s|%s", dc->d_name, name);
+                command("copy", data);
+
+                // Move file to its appropriate folder
+                DIR *target = getDir(type);
+                sprintf(data, "%s|%s", name, type);
+                command("move", data);
+                closedir(target);
+
+                animal = strtok_r(NULL, "_", &save1);
+            }
+            command("delete", dc->d_name);
         }
     }
     rewinddir(dir);

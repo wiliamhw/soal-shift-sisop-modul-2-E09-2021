@@ -69,8 +69,23 @@ Di soal ini kami disuruh:
 ### Penyelesaian Soal
 Solusi di bawah ini dilakukan di dalam fungsi `categorize`, sebelum file dipindahkan.
 1. Dapatkan nama hewan.
-2. Ubah nama file menjadi nama hewan.
-3. Pindahkan file ke folder yang tepat.
+2. Copy file menjadi file baru bernama `<nama peliharaan>`.
+3. Pindahkan file `<nama peliharaan>` ke folder yang tepat.
+4. Hapus file lama.
+
+
+## Subsoal d
+### Penjelasan Soal
+Di soal ini kami disuruh:
+1. Dapatkan jenis dan nama peliharaan kedua.
+2. Pindahkan file tersebut ke folder yang tepat untuk kedua kalinya.
+
+### Penyelesaian Soal
+Solusi ini akan memodifikasi solusi pada subsoal c.
+* Jika terdapat peliharaan kedua:
+   1. Lakukan solusi no.1-3 subsoal c untuk peliharaan kedua.
+   2. Setelah kedua file terpindah, hapus file lama.
+
 <br><br>
 
 # Soal 3
