@@ -27,6 +27,7 @@ int main()
     if (dir == NULL) {
         command("make_dir", petshop);
         dir = opendir(petshop);
+        deleteFolder(petshop, dir, true);
     }
 
     // Change curr dir
