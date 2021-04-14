@@ -18,7 +18,7 @@
 
 ## Subsoal a
 ### Penjelasan Soal
-Di soal ini, kami disuruh:
+Di soal ini kami disuruh:
 1. Extract pets.zip ke dalam folder `/home/[user]/modul2/petshop`.
 2. Hapus folder-folder yang ada dalam pets.zip.
 
@@ -39,13 +39,13 @@ Di soal ini, kami disuruh:
 
 ## Subsoal b
 ### Penjelasan Soal
-Di soal ini, kami disuruh:
+Di soal ini kami disuruh:
 1. Dapatkan jenis peliharaan dari nama file.
 2. Masukan file ke dalam folder sesuai dengan jenis peliharaan.
    * Contoh: jenis peliharaan kucing akan disimpan dalam `/petshop/cat`.
 
 ## Penyelesaian Soal
-* Semua solusi di bawah ini dijalankan dalam fungsi yang menyerupai `listFilesRecursively.c`.
+Semua solusi di bawah ini dijalankan dalam fungsi yang menyerupai `listFilesRecursively.c`, yaitu fungsi `categorize`.
 
 ### Perintah 1
 1. Pastikan file bukan berupa folder.
@@ -56,9 +56,21 @@ Di soal ini, kami disuruh:
 1. Cek apakah folder jenis peliharaan sudah terbuat.
 2. Jika belum:
    1. Buat folder jenis peliharaan dengan perintah `cp -r /home/<user>/log <jenis peliharaan>`.
-   2. Bersihkan folder `<jenis peliharaan>` dengan perintah `rm -r <jenis peliharaan>/*`.
+   2. Bersihkan folder `<jenis peliharaan>`.
 3. Pindahkan file ke folder jenis peliharaan dengan perintah `mv <nama file> <jenis peliharaan>`.
 
+
+## Subsoal c
+### Penjelasan Soal
+Di soal ini kami disuruh:
+* Rename nama file sesuai dengan nama peliharaannya.  
+  Contoh: `petshop/cat/joni.jpg`.
+
+### Penyelesaian Soal
+Solusi di bawah ini dilakukan di dalam fungsi `categorize`, sebelum file dipindahkan.
+1. Dapatkan nama hewan.
+2. Ubah nama file menjadi nama hewan.
+3. Pindahkan file ke folder yang tepat.
 <br><br>
 
 # Soal 3

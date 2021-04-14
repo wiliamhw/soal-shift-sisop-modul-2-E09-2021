@@ -122,7 +122,7 @@ void deleteFolder(char *basePath, DIR *dir, bool deleteFile)
 void categorize(DIR *dir)
 {
     char *basePath = ".";
-    char path[1000];
+    char path[1000], data[257];
     struct dirent *dc;
     while ((dc = readdir(dir)) != NULL) {
         if (strcmp(dc->d_name, ".") != 0 && strcmp(dc->d_name, "..") != 0) {
@@ -134,14 +134,19 @@ void categorize(DIR *dir)
             }
 
             // Initialize filename and its type
-            char filename[sizeof(dc->d_name)], type[sizeof(dc->d_name)];
+            char filename[sizeof(dc->d_name)];
             strcpy(filename, dc->d_name);
-            strcpy(type, strtok(dc->d_name, ";"));
+            char *type = strtok(dc->d_name, ";");
+            char *name = strtok(NULL, ";");
+
+            // Change filename to name
+            strcat(name, ".jpg");
+            sprintf(data, "%s|%s", filename, name);
+            command("move", data);
 
             // Move file to its appropriate folder
             DIR *target = getDir(type);
-            char data[sizeof(filename) + sizeof(type) + 1];
-            sprintf(data, "%s|%s", filename, type);
+            sprintf(data, "%s|%s", name, type);
             command("move", data);
             closedir(target);
         }
