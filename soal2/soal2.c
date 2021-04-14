@@ -139,16 +139,16 @@ void categorize(DIR *dir)
             strcpy(type, strtok(dc->d_name, ";"));
 
             // Move file to its appropriate folder
-            DIR *dir = opendir(type);
-            if (dir == NULL) {
+            DIR *target = opendir(type);
+            if (target == NULL) {
                 command("make_dir", type);
-                dir = opendir(type);
-                deleteFolder(type, dir, true); // Clear initial folder
+                target = opendir(type);
+                deleteFolder(type, target, true); // Clear initial folder
             }
             char data[sizeof(filename) + sizeof(type) + 1];
             sprintf(data, "%s|%s", filename, type);
             command("move", data);
-            closedir(dir);
+            closedir(target);
         }
     }
     rewinddir(dir);
