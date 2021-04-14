@@ -9,6 +9,7 @@
 
 bool isRegularFile(const char *path);
 void downloadExtract();
+DIR *getDir(char *basePath);
 void deleteFolder(char *basePath, DIR *dir, bool deleteFile);
 void categorize(DIR *dir);
 void command(char *command, char *path);
@@ -22,13 +23,12 @@ void command(char *command, char *path);
 
 int main()
 {
-    char *petshop = "/home/frain8/modul2/petshop";
-    DIR *dir = opendir(petshop);
-    if (dir == NULL) {
-        command("make_dir", petshop);
-        dir = opendir(petshop);
-        deleteFolder(petshop, dir, true);
-    }
+    // Make sure that folder exist
+    char petshop[50] = "/home/frain8/modul2";
+    DIR *tmp = getDir(petshop);
+    closedir(tmp);
+    strcat(petshop, "/petshop");
+    DIR *dir = getDir(petshop);
 
     // Change curr dir
     if ((chdir(petshop)) < 0) {
@@ -139,12 +139,7 @@ void categorize(DIR *dir)
             strcpy(type, strtok(dc->d_name, ";"));
 
             // Move file to its appropriate folder
-            DIR *target = opendir(type);
-            if (target == NULL) {
-                command("make_dir", type);
-                target = opendir(type);
-                deleteFolder(type, target, true); // Clear initial folder
-            }
+            DIR *target = getDir(type);
             char data[sizeof(filename) + sizeof(type) + 1];
             sprintf(data, "%s|%s", filename, type);
             command("move", data);
@@ -159,4 +154,15 @@ bool isRegularFile(const char *path)
     struct stat path_stat;
     stat(path, &path_stat);
     return (S_ISREG(path_stat.st_mode) != 0);
+}
+
+DIR *getDir(char *basePath)
+{
+    DIR *dir = opendir(basePath);
+    if (!dir) {
+        command("make_dir", basePath);
+        dir = opendir(basePath);
+        deleteFolder(basePath, dir, true); // Clear initial folder
+    }
+    return dir;
 }
