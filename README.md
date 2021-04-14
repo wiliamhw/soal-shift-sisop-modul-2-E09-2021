@@ -45,7 +45,7 @@ Di soal ini, kami disuruh:
    * Contoh: jenis peliharaan kucing akan disimpan dalam `/petshop/cat`.
 
 ## Penyelesaian Soal
-* Semua solusi di bawah ini dijalankan dalam fungsi `listFilesRecursively.c`.
+* Semua solusi di bawah ini dijalankan dalam fungsi yang menyerupai `listFilesRecursively.c`.
 
 ### Perintah 1
 1. Pastikan file bukan berupa folder.
@@ -53,6 +53,11 @@ Di soal ini, kami disuruh:
 3. Dapatkan jenis peliharaan dari nama file dengan perintah `strtok(<namafile>, ';')`.
 
 ### Perintah 2
+1. Cek apakah folder jenis peliharaan sudah terbuat.
+2. Jika belum:
+   1. Buat folder jenis peliharaan dengan perintah `cp -r /home/<user>/log <jenis peliharaan>`.
+   2. Bersihkan folder `<jenis peliharaan>` dengan perintah `rm -r <jenis peliharaan>/*`.
+3. Pindahkan file ke folder jenis peliharaan dengan perintah `mv <nama file> <jenis peliharaan>`.
 
 <br><br>
 
