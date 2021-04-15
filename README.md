@@ -86,6 +86,25 @@ Solusi ini akan memodifikasi solusi pada subsoal c.
    1. Lakukan solusi no.1-3 subsoal c untuk peliharaan kedua.
    2. Setelah kedua file terpindah, hapus file lama.
 
+
+## Subsoal e
+### Penjelasan Soal
+Di soal ini kami disuruh:
+1. Membuat file `keterangan.txt` di setiap folder jenis peliharaan.
+2. Isi file `keterangan.txt` dengan nama dan umur semua peliharaan di folder yang sama.  
+   Format:
+   > nama : joni  
+   > umur : 3 tahun
+   >
+   > nama : miko  
+   > umur: 2 tahun
+   >
+
+### Penyelesaian Soal
+Solusi ini di antara solusi no.1 dan no.2 pada subsoal d.
+1. Dapatkan umur.
+2. Jika file `keterangan.txt` tidak ada, buat file tersebut dengan perintah `touch <nama folder>/keterangan.txt`.
+3. Isi `keterangan.txt` sesuai dengan format.
 <br><br>
 
 # Soal 3
