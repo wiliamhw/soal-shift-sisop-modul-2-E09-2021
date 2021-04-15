@@ -103,7 +103,7 @@ Di soal ini kami disuruh:
 ### Penyelesaian Soal
 Solusi ini di antara solusi no.1 dan no.2 pada subsoal d.
 1. Dapatkan umur.
-2. Jika file `keterangan.txt` tidak ada, buat file tersebut dengan perintah `touch <nama folder>/keterangan.txt`.
+2. Jika file `keterangan.txt` tidak ada, buat file tersebut.
 3. Isi `keterangan.txt` sesuai dengan format.
 <br><br>
 
