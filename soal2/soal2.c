@@ -15,7 +15,7 @@ bool isRegularFile(const char *path);
 void downloadExtract();
 void deleteFolder(char *basePath, DIR *dir, bool deleteFile);
 void categorize(DIR *dir);
-void command(const char *command, char *path); // download, extract, delete, make_dir, move, copy
+void command(const char *command, char *path); // download, extract, delete, make_dir, copy
 
 const char *user = "frain8";
 
@@ -59,9 +59,8 @@ void deleteFolder(char *basePath, DIR *dir, bool deleteFile)
     struct dirent *dp;
     while ((dp = readdir(dir)) != NULL) {
         if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
-            // Construct new path from the base path
-            sprintf(path, "%s/%s", basePath, dp->d_name);
 
+            sprintf(path, "%s/%s", basePath, dp->d_name);
             if (deleteFile || !isRegularFile(path)) {
                 command("delete", path);
             }
@@ -73,14 +72,13 @@ void deleteFolder(char *basePath, DIR *dir, bool deleteFile)
 void categorize(DIR *dir)
 {
     char *basePath = ".";
-    char path[1000], data[307], filename[100], name[50], type[50], age[4];
+    char path[1000], data[360], filename[100], name[50], type[50], age[4];
     struct dirent *dp;
     
     while ((dp = readdir(dir)) != NULL) {
         if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
-            // Construct new path from the base path
+            
             sprintf(path, "%s/%s", basePath, dp->d_name);
-
             if (!isRegularFile(path)) {
                 continue;
             }
@@ -105,14 +103,10 @@ void categorize(DIR *dir)
                 fputs("\n", log);
                 fclose(log);
 
-                // Copy file <filename> to file <name>
+                // Copy file to its appropriate folder
                 strcat(name, ".jpg");
-                sprintf(data, "%s|%s", dp->d_name, name);
+                sprintf(data, "%s|%s/%s", dp->d_name, type, name); // data = "filename|destination"
                 command("copy", data);
-
-                // Move file to its appropriate folder
-                sprintf(data, "%s|%s", name, type);
-                command("move", data);
 
                 animal = strtok_r(NULL, "_", &save1);
             }
@@ -189,20 +183,14 @@ void command(const char *command, char *path)
             char *argv[] = {"cp", "-r", src, path, NULL};
             execv("/bin/cp", argv);
         }
-        else if (strcmp(command, "move") == 0 || strcmp(command, "copy") == 0 ) {
+        else if (strcmp(command, "copy") == 0 ) {
             // Parse data in path
             char arr[2][50];
             strcpy(arr[0], strtok(path, "|"));
             strcpy(arr[1], strtok(NULL, "|"));
 
-            if (strcmp(command, "move") == 0) {
-                char *argv[] = {"mv", arr[0], arr[1], NULL};
-                execv("/bin/mv", argv);
-            }
-            else {
-                char *argv[] = {"cp", arr[0], arr[1], NULL};
-                execv("/bin/cp", argv);
-            }
+            char *argv[] = {"cp", arr[0], arr[1], NULL};
+            execv("/bin/cp", argv);
         }
         else {
             printf("Unrecognized command\n");

@@ -70,7 +70,7 @@ Di soal ini kami disuruh:
 Solusi di bawah ini dilakukan di dalam fungsi `categorize`, sebelum file dipindahkan.
 1. Dapatkan nama hewan.
 2. Copy file menjadi file baru bernama `<nama peliharaan>`.
-3. Pindahkan file `<nama peliharaan>` ke folder yang tepat.
+3. Pindahkan (*copy*) file `<nama peliharaan>` ke folder yang tepat.
 4. Hapus file lama.
 
 
