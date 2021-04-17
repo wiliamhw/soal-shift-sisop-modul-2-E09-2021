@@ -44,15 +44,15 @@ Di soal ini kami disuruh:
 2. Masukan file ke dalam folder sesuai dengan jenis peliharaan.
    * Contoh: jenis peliharaan kucing akan disimpan dalam `/petshop/cat`.
 
-## Penyelesaian Soal
+### Penyelesaian Soal
 Semua solusi di bawah ini dijalankan dalam fungsi yang menyerupai `listFilesRecursively.c`, yaitu fungsi `categorize`.
 
-### Perintah 1
+#### Perintah 1
 1. Pastikan file bukan berupa folder.
 2. Dapatkan nama file.
 3. Dapatkan jenis peliharaan dari nama file dengan perintah `strtok(<namafile>, ';')`.
 
-### Perintah 2
+#### Perintah 2
 1. Cek apakah folder jenis peliharaan sudah terbuat.
 2. Jika belum:
    1. Buat folder jenis peliharaan dengan perintah `cp -r /home/<user>/log <jenis peliharaan>`.
@@ -70,7 +70,7 @@ Di soal ini kami disuruh:
 Solusi di bawah ini dilakukan di dalam fungsi `categorize`, sebelum file dipindahkan.
 1. Dapatkan nama hewan.
 2. Copy file menjadi file baru bernama `<nama peliharaan>`.
-3. Pindahkan file `<nama peliharaan>` ke folder yang tepat.
+3. Pindahkan (*copy*) file `<nama peliharaan>` ke folder yang tepat.
 4. Hapus file lama.
 
 
