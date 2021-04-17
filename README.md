@@ -110,4 +110,72 @@ Solusi ini di antara solusi no.1 dan no.2 pada subsoal d.
 # Soal 3
 ## Info
 * Dikerjakan oleh 05111940000074 - Nur Ahmad Khatim.
+* Tidak boleh menggunakan: `system()` dan `mkdir()`.
+* **Program utama** merupakan **SEBUAH PROGRAM C**.
+* **Wajib** membuat algoritma Caesar Cipher pada program utama yang dibuat.
+
+
+## Subsoal a
+### Penjelasan Soal
+1. Membuat sebuah program C yang membuat sebuah direktori setiap 40 detik.
+2. Penamaan direktori sesuai timestamp [YYYY-mm-dd_HH-ii-ss].
+
+### Penyelesaian Soal
+1. Membuat while looping yang berjalan setiap 40 detik dengan bantuan variabel time_t dan fungsi difftime().
+2. Fork child process.
+3. Menjalankan perintah membuat directory `mkdir` dengan penamaan sesuai timestamp dengan bantuan fungsi strftime() dan execv().
+
+
+## Subsoal b
+### Penjelasan Soal
+1. Mengisi setiap direktori dengan 10 gambar yang didownload dari https://picsum.photos/ setiap 5 detik.
+2. Setiap gambar diberi nama sesuai timestamp [YYYY-mm-dd_HH-ii-ss].
+3. Gambar berukuran (n%1000) + 50 pixel dengan n adalah detik Epoch Unix.
+
+## Penyelesaian Soal
+1. Mengambil detik Epoch Unix `int epoch = ((int)time(NULL) % 1000) + 50;`.
+2. Membuat while looping yang berjalan setiap 5 detik dengan bantuan variabel time_t dan fungsi difftime().
+3. Fork child process.
+4. Menjalankan perintah download `wget` dengan penamaan sesuai timestamp dengan bantuan fungsi strftime() dan execv() serta ditempatkan sesuai path direktori.
+5. While looping dibreak setelah download 10 gambar.
+
+
+## Subsoal c
+### Penjelasan Soal
+1. Setelah direktori terisi 10 gambar, program membuat sebuah file `status.txt`.
+2. File tersebut berisi pesan "Download Success"
+3. Pesan terenkripsi dengan teknik Caesar Cipher dan dengan shift 5.
+4. Setelah file tersebut dibuat, direktori dizip dan direktori didelete.
+
+### Penyelesaian Soal
+1. Mengenkripsi text "Download Success" menggunakan algoritma Caesar Cipher.
+2. Membuat file `status.txt` `FILE *statustext = fopen(path_status, "w");`.
+3. Mengisi file dengan text yang sudah dienkripsi.
+4. Zip direktori dengan perintah `zip` dengan option `-rm` dan bantuan fungsi execv().
+
+
+## Subsoal d
+### Penjelasan Soal
+1. Program dapat men-generate sebuah program "Killer" yang executable.
+2. Program "Killer" akan menterminasi semua proses program yang sedang berjalan dan menghapus dirinya sendiri setelah program dijalankan.
+3. Program "Killer" merupakan **program bash**.
+
+### Penyelesaian Soal
+1. Membuat sebuah FILE `Killer.sh`
+2. Mengisi file tersebut dengan perintah `kill` sesuai pid yang didapatkan dari fungsi getpid().
+3. Menambahkan isi file dengan perintah `rm -- "$0"` untuk menghapus diri sendiri.
+
+
+## Subsoal e
+### Penjelasan Soal
+1. Program utama dapat dijalankan di dua mode.
+2. Mode pertama dijalankan dengan argumen -z, program utama langsung menghentikan semua operasinya ketika program "Killer" dijalankan.
+3. Mode kedua dijalankan dengan argumen -x, program utama berhenti namun membiarkan proses di setiap direktori yang masih berjalan hingga selesai.
+
+### Penyelesaian Soal
+1. Menjadikan fungsi main() dapat menerima argumen.
+2. Mengecek argumen yang diinputkan menggunakan fungsi strcmp().
+3. Untuk mode = 1, mengambil pid dengan getpid() dari process utama.
+4. Jika mode = 1, maka FILE `Killer.sh` dibuat pada saat Fork child process untuk membuat direktori.
+5. Jika mode = 2, hanya perlu pid dari process utama dan akan membuat FILE `Killer.sh` pada saat itu juga.
 <br><br>
