@@ -6,7 +6,79 @@
 
 # Soal 1
 ## Info
-* Dikerjakan oleh 05111940000212 - Fadhil Dimas Sucahyo.
+* Dikerjakan oleh **05111940000087** - William Handi Wijaya dan **05111940000212** - Fadhil Dimas Sucahyo.
+* Tidak boleh menggunakan: `system()`, *shell script*, `mkdir()`, dan `rename` (yang di bahasa C).
+* Menggunakan `fork` dan `exec`.
+* Tidak bolehh menggunakan `cron`.
+* Tips:
+  * Gunakan fungsi `wait()` dan `sleep()` untuk memperlancar.
+  * untuk mendownload zip, bisa menggunakan command:  
+    `wget --no-check-certificate "https://drive.google.com/uc?id=< ID-FILE >&export=download" -O < Nama_untuk_filenya.ext >`
+
+## Subsoal a
+### Penjelasan Soal
+Di soal ini, kami disuruh:
+* Membuat folder:
+  * **Musyik** untuk mp3
+  * **Fylm** untuk mp4
+  * **Pyoto** untuk jpg
+
+### Penyelesaian Soal
+* Buat ketiga folder tersebut di *current directory* menggunakan perintah `mkdir` pada `exec`.
+
+## Subsoal b
+### Penjelasan Soal
+Di soal ini, kami disuruh:
+* Download file zip dari masing-masing folder melalui link berikut:
+  * Musik: <https://drive.google.com/file/d/1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J/view>
+  * Foto: <https://drive.google.com/file/d/1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD/view>
+  * Film: <https://drive.google.com/file/d/1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp/view>
+
+### Penyelesaian Soal
+1. Dapatkan id file dari masing-masing folder.
+2. Buat link untuk mendownload file berdasarkan id file.
+3. Download file zip menggunakan command `wget` ke folder sementara bernama `tmpDir`.
+
+## Subsoal c
+### Penjelasan Soal
+Di soal ini, kami disuruh:
+* Extract masing-masing zip.
+
+### Penyelesaian Soal
+* Extract masing-masing zip di folder `tmpDir` dengan perintah `unzip`.
+
+## Subsoal d
+### Penjelasan Soal
+Di soal ini, kami disuruh:
+* Pindahkan file ke folder yang sesuai.
+
+## Penyelesaian Soal
+1. Scan file di dalam folder `tmpDir` dan dapatkan ekstensinya. 
+2. Untuk setiap ekstensi, lakukan perintah ini:
+   1. Jika file berekstensi mp3, masukkan ke folder **Musyik**.
+   2. Jika file berekstensi mp4, masukkan ke folder **Fylm**.
+   3. Jika file berekstensi jpg, masukkan ke folder **Pyoto**.
+3. Jika telah selesai, hapus folder `tmpDir`.
+
+## Subsoal e
+### Penjelasan Soal
+Di soal ini, kami disuruh:
+* Program berjalan secara otomatis 6 jam sebelum waktu ulang tahun Stevany, 
+   yaitu: `09 April Pukul 22.22 WIB`
+
+### Penyelesaian Soal
+1. Buat program ini menjadi Daemon Process.
+2. Dapatkan tanggal dan waktu saat ini hingga ketelitian menit.
+3. Jika tanggal = `9`, bulan = `4`, jam = `16`, dan menit = `22`, jalankan program ini.
+
+## Subsoal f
+### Penjelasan Soal
+Di soal ini, kami disuruh:
+1. Pada `09 April Pukul 22.22 WIB`, zip **Musyik**, **Fylm**, dan **Pyoto** dengan nama `Lopyu_Stevany.zip`.
+2. Hapus folder **Musyik**, **Fylm**, dan **Pyoto**.
+
+### Penyelesaian Soal
+* Pada `09 April Pukul 22.22 WIB`, zip dan hapus ketiga folder ini dengan perintah `zip -rm Lopyu_Stevany.zip Musyik Fylm Pyoto`.
 <br><br>
 
 # Soal 2

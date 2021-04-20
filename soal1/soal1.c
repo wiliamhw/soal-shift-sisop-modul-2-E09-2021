@@ -1,140 +1,227 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <wait.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <wait.h>
-#include <unistd.h>
 #include <time.h>
-#include <string.h>
 #include <dirent.h>
-#define NUM_FOLDER 3
 
-void dl_drive(pid_t child_id, int *status, char *file_name[]);
-void makedir(pid_t child_id, int *status, char *fl_name[], char *fl2[]);
-void for_stev(pid_t child_id,char *fl2[]);
-void browse(int *status, char fl_name[], char fl2[]);
-void move(struct dirent * drent, int *status, char *fl2, char fl_name[]);
-void del_fl(pid_t child_id, int *status, char *fl_name[]);
-void zipfl(pid_t child_id, int *status, char *fl2[], char zipname[]);
-void godaemon(int *status);
+bool isRegularFile(const char *path);
+bool isValid(const char *ext);
+bool diffByHours(int hours);
+int *makeDaemon(pid_t *pid, pid_t *sid);
+void deleteFolder(char *basePath, DIR *dir);
+void dirInit(char *basePath);
+void downloadExtract();
+void listFilesRecursively(char *basePath);
+void command(const char *command, char *path); // make_dir, delete, extract, download, move, multi_zip
+
+char *currDir = "/home/frain8/Documents/Sisop/Modul_2/soal_shift_2/soal1";
+char *tmpDir = "temp";
+int countFolder = 3;
+char *dirName[] = {"Musyik", "Fylm", "Pyoto"}; // Format: mp3, mp4, jpg
 
 int main()
 {
-    const char workdir[]="/home/sisop";
-    pid_t child_id, sid;
+    pid_t pid, sid;
+    int *status = makeDaemon(&pid, &sid);
+
+    while (true) {
+        if (diffByHours(6)) { // categorize
+            for (int i = 0; i < countFolder; i++) {
+                dirInit(dirName[i]); // make initial dir
+            }
+            dirInit(tmpDir);
+            downloadExtract();
+            listFilesRecursively(tmpDir);
+            command("delete", tmpDir);
+        } 
+        else if (diffByHours(0)) { 
+            command("multi_zip", ""); // zip folders
+        }
+        while (wait(status) > 0);
+        sleep(1);
+    }
+    return 0;
+}
+// sudo date --set="2021-04-09 16:21:59"
+// sudo date --set="2021-04-09 22:21:59"
+// unzip Lopyu_Stevany.zip
+
+bool diffByHours(int hours)
+{
+    time_t t = time(NULL);
+    struct tm tm = *localtime(&t);
+    return (tm.tm_mday == 9 & tm.tm_mon + 1 == 4 && 22 - tm.tm_hour == hours && 
+            tm.tm_min == 22 && tm.tm_sec <= 2);
+}
+
+void listFilesRecursively(char *basePath)
+{
+    char path[300], data[350];
+    struct dirent *dp;
+    DIR *dir = opendir(basePath);
+
+    if (dir == NULL) {
+        return;
+    }
+    while ((dp = readdir(dir)) != NULL) {
+        if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
+            sprintf(path, "%s/%s", basePath, dp->d_name); // Construct new path from our base path
+            char *ext = strrchr(dp->d_name, '.') + 1;
+
+            // Move file to apropriate folder
+            if (isRegularFile(path) && isValid(ext)) {
+                if (strcmp(ext, "mp3") == 0) {
+                    sprintf(data, "%s|%s", path, dirName[0]);
+                } 
+                else if (strcmp(ext, "mp4") == 0) {
+                    sprintf(data, "%s|%s", path, dirName[1]);
+                }
+                else {
+                    sprintf(data, "%s|%s", path, dirName[2]);
+                }
+                command("move", data);
+            }
+            listFilesRecursively(path);
+        }
+    }
+    closedir(dir);
+}
+
+bool isValid(const char *ext) {
+    return (ext && (
+                strcmp(ext, "mp3") == 0 || strcmp(ext, "mp4") == 0 || strcmp(ext, "jpg") == 0
+                || strcmp(ext, "jpeg") == 0|| strcmp(ext, "png") == 0
+    ));
+}
+
+bool isRegularFile(const char *path)
+{
+    struct stat path_stat;
+    stat(path, &path_stat);
+    return (S_ISREG(path_stat.st_mode) != 0);
+}
+
+void downloadExtract()
+{
+    // id file | nama zip
+    char data[][100] = {
+        "1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J|musik.zip",
+        "1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD|foto.zip",
+        "1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp|film.zip"
+    };
+    for (int i = 0; i < countFolder; i++) {
+        command("download", data[i]);
+        strtok(data[i], "|");
+        command("extract", strtok(NULL, "|")); // extract to temp
+    }
+}
+
+void dirInit(char *basePath)
+{
+    DIR *dir = opendir(basePath);
+    if (!dir) { // If not exist, make new folder
+        command("make_dir", basePath);
+        dir = opendir(basePath);
+    } else {
+        deleteFolder(basePath, dir); // else, clean the folder
+    }
+    closedir(dir);
+}
+
+void deleteFolder(char *basePath, DIR *dir)
+{
+    char path[1000];
+    struct dirent *dp;
+    while ((dp = readdir(dir)) != NULL) {
+        if (strcmp(dp->d_name, ".") != 0 && strcmp(dp->d_name, "..") != 0) {
+            sprintf(path, "%s/%s", basePath, dp->d_name);
+            command("delete", path);
+        }
+    }
+    rewinddir(dir);
+}
+
+void command(const char *command, char *path)
+{
     int status;
-    if ((child_id=fork())>0) exit (EXIT_SUCCESS);
+    pid_t child_id;
+    child_id = fork();
+
+    if (child_id < 0) {
+        exit(EXIT_FAILURE); // Jika gagal membuat proses baru, program akan berhenti
+    }
+
+    if (child_id == 0) {
+        // this is child
+        if (strcmp(command, "make_dir") == 0) {
+            char *argv[] = {"mkdir", path, NULL};
+            execv("/bin/mkdir", argv);
+        }
+        else if (strcmp(command, "delete") == 0) {
+            char *argv[] = {"rm", "-rf", path, NULL};
+            execv("/bin/rm", argv);
+        }
+        else if (strcmp(command, "extract") == 0) {
+            char src[100];
+            sprintf(src, "temp/%s", path);
+            char *argv[] = {"unzip", src, "-d", tmpDir, NULL};
+            execv("/bin/unzip", argv);
+        }
+        else if (strcmp(command, "multi_zip") == 0) {
+            char *argv[] = {"zip", "-rm", "Lopyu_Stevany.zip", dirName[2], dirName[1], dirName[0], NULL};
+            execv("/bin/zip", argv);
+        }
+        else if (strcmp(command, "download") == 0 || strcmp(command, "move") == 0) {
+            // Parse data in path
+            char arr[2][50];
+            strcpy(arr[0], strtok(path, "|"));
+            strcpy(arr[1], strtok(NULL, "|"));
+
+            if (strcmp(command, "download") == 0) {
+                char link[100], targetDir[100];
+                sprintf(link, "https://drive.google.com/uc?id=%s&export=download", arr[0]);
+                sprintf(targetDir, "%s/%s", tmpDir, arr[1]);
+
+                char *argv[] = {"wget", "--no-check-certificate", link, "-O", targetDir, "-q", NULL};
+                execv("/bin/wget", argv);
+            } else {
+                char *argv[] = {"mv", arr[0], arr[1], NULL};
+                execv("/bin/mv", argv);
+            }
+        }
+        else exit(EXIT_FAILURE);
+    } else {
+        // this is parent
+        while (wait(&status) > 0);
+        return;
+    }
+}
+
+int *makeDaemon(pid_t *pid, pid_t *sid)
+{
+    int status;
+    *pid = fork();
+
+    if (*pid != 0) {
+        exit(EXIT_FAILURE);
+    }
+    if (*pid > 0) {
+        exit(EXIT_SUCCESS);
+    }
     umask(0);
-    sid = setsid();
-    if (sid<0||chdir(workdir)) exit (EXIT_FAILURE);
+
+    *sid = setsid();
+    if (*sid < 0 || chdir(currDir) < 0) {
+        exit(EXIT_FAILURE);
+    }
+
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
-    godaemon(&status);
-    return 0;
-}
-
-void dl_drive(pid_t child_id, int *status, char *file_name[])
-{
-    char *links[]= {"https://drive.google.com/file/d/1FsrAzb9B5ixooGUs0dGiBr-rC7TS9wTD/view","https://drive.google.com/file/d/1ZG8nRBRPquhYXq_sISdsVcXx5VdEgi-J/view","https://drive.google.com/file/d/1ktjGgDkL0nNpY-vT7rT7O6ZI47Ke9xcp/view"};
-    for(int a=0;a<NUM_FOLDER;a++)
-    {
-        if((child_id = fork())==0)
-        {
-            char *argv[] = {"wget", "--no-check-certificate", links[a], "-O", file_name[a], "-q", NULL};
-            execv("/bin/wget", argv);
-            while(wait(status)>0);
-        }
-        if((child_id = fork())==0)
-        {
-            char *argv[] = {"unzip", "-qq", file_name[a], NULL};
-            execv("/bin/unzip", argv); 
-            while(wait(status)>0);
-        }                 
-    }
-}
-
-void makedir(pid_t child_id, int *status, char *fl_name[], char *fl2[])
-{
-    if((child_id = fork())==0)
-    {
-        char *argv[] = {"mkdir", "-p", fl2[0], fl2[1], fl2[2], NULL};
-        execv("/bin/mkdir", argv);
-    } while(wait(status)>0);
-}
-
-void for_stev(pid_t child_id,char *fl2[])
-{
-    int status;
-    char *file_name[]={"FOTO.zip","MUSIK.zip","FILM.zip"};
-    char *fl_name[]={"FOTO","MUSIK","FILM"};
-    makedir(child_id,&status,fl_name,fl2);
-    dl_drive(child_id,&status,file_name);
-    for(int b=0;b<NUM_FOLDER;b++)browse(&status,fl_name[b],fl2[b]);
-    del_fl(child_id,&status,fl_name);
-}
-
-void browse(int *status, char fl_name[], char fl2[])
-{
-    DIR *dir=opendir(fl_name);
-    struct dirent *drent;
-    if(dir != NULL)
-    {
-        while((drent = readdir(dir)))move(drent,status,fl2,fl_name);
-        (void)closedir(dir);
-    }else perror ("ERROR: Could not open directory");
-}
-
-void move(struct dirent * drent, int *status, char *fl2, char fl_name[])
-{
-    pid_t child_move = fork();
-    if(child_move==0 && (strcmp(drent->d_name, "..")==0)) exit(EXIT_SUCCESS);
-    if(child_move==0)
-    {
-        char pathfile[512];
-        strcpy(pathfile,fl_name); strcat(pathfile,"/"); strcat(pathfile,drent->d_name);
-        char *argv[] = {"mv",pathfile, fl2,NULL};
-        execv("/bin/mv", argv);
-    } while(wait(status)>0);
-}
-
-void del_fl(pid_t child_id, int *status, char *fl_name[])
-{
-    if((child_id = fork())==0)
-    {
-        char *argv[] = {"rm", "-rf", fl_name[0], fl_name[1], fl_name[2], NULL};
-        execv("/bin/rm",argv);
-    } while(wait(status)>0);
-}
-
-void zipfl(pid_t child_id, int *status, char *fl2[], char zipname[])
-{
-    if((child_id = fork())==0)
-    {
-        char *argv[] = {"zip","-rmvq",zipname,fl2[0],fl2[1],fl2[2],NULL};
-        execv("/bin/zip",argv);
-    } while(wait(status)>0);
-}
-
-void godaemon(int *status)
-{
-    pid_t child_id;
-    const unsigned sleep_interval=1;
-    const int bmonth = 3;
-    const int bday = 9;
-    const int bhour = 22;
-    const int bmin = 22;
-    char *fl2[]={"Fyoto","Musyik","Fylm"};
-    while(1)
-    {
-        time_t now=time(NULL);
-        struct tm *nowloc=localtime(&now);
-        if (bmonth == nowloc->tm_mon && bday == nowloc->tm_mday && bhour == nowloc->tm_hour&&bmin==nowloc->tm_min&& nowloc->tm_sec==0)
-        zipfl(child_id, status, fl2, "Lopyu_Stefany.zip");
-        if (bmonth == nowloc->tm_mon && bday == nowloc->tm_mday && bhour == nowloc->tm_hour&&bmin==nowloc->tm_min&& nowloc->tm_sec==0)
-        for_stev(child_id,fl2);
-        while(wait(status)>0);
-
-        sleep(sleep_interval);
-    }
+    return &status;
 }
