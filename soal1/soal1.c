@@ -10,23 +10,22 @@
 #include <dirent.h>
 
 bool isRegularFile(const char *path);
-bool isImage(const char *ext);
 bool isValid(const char *ext);
 bool diffByHours(int hours);
 int *makeDaemon(pid_t *pid, pid_t *sid);
 void deleteFolder(char *basePath, DIR *dir);
 void dirInit(char *basePath);
 void downloadExtract();
-void listFilesRecursively(char *basePath, char *dirName[]);
+void listFilesRecursively(char *basePath);
 void command(const char *command, char *path); // make_dir, delete, extract, download, move, multi_zip
 
-const char *currDir = "/home/frain8/Documents/Sisop/Modul_2/soal_shift_2/soal1";
-const int countFolder = 3;
+char *currDir = "/home/frain8/Documents/Sisop/Modul_2/soal_shift_2/soal1";
 char *tmpDir = "temp";
+int countFolder = 3;
+char *dirName[] = {"Musyik", "Fylm", "Pyoto"}; // Format: mp3, mp4, jpg
 
 int main()
 {
-    char *dirName[] = {"Musyik", "Fylm", "Pyoto"}; // Format:mp3, mp4, jpg
     pid_t pid, sid;
     int *status = makeDaemon(&pid, &sid);
 
@@ -37,20 +36,11 @@ int main()
             }
             dirInit(tmpDir);
             downloadExtract();
-            listFilesRecursively(tmpDir, dirName);
+            listFilesRecursively(tmpDir);
             command("delete", tmpDir);
         } 
-        else if (diffByHours(0)) { // zip folders
-            // Make data packet
-            char data[500] = "";
-            char tmp[100];
-            strcpy(data, dirName[0]);
-            for (int i = 1; i < countFolder; i++) {
-                sprintf(tmp, "|%s", dirName[i]);
-                strcat(data, tmp);
-            }
-            strcat(data, "|Lopyu_Stevany.zip");
-            command("multi_zip", data);
+        else if (diffByHours(0)) { 
+            command("multi_zip", ""); // zip folders
         }
         while (wait(status) > 0);
         sleep(1);
@@ -69,7 +59,7 @@ bool diffByHours(int hours)
             tm.tm_min == 22 && tm.tm_sec <= 2);
 }
 
-void listFilesRecursively(char *basePath, char *dirName[])
+void listFilesRecursively(char *basePath)
 {
     char path[300], data[350];
     struct dirent *dp;
@@ -96,27 +86,17 @@ void listFilesRecursively(char *basePath, char *dirName[])
                 }
                 command("move", data);
             }
-            listFilesRecursively(path, dirName);
+            listFilesRecursively(path);
         }
     }
     closedir(dir);
 }
 
 bool isValid(const char *ext) {
-    return (
-        ext && (strcmp(ext, "mp3") == 0
-            || strcmp(ext, "mp4") == 0
-            || isImage(ext))
-    );
-}
-
-bool isImage(const char *ext)
-{
-    return (
-        strcmp(ext, "jpg") == 0
-        || strcmp(ext, "jpeg") == 0
-        || strcmp(ext, "png") == 0
-    );
+    return (ext && (
+                strcmp(ext, "mp3") == 0 || strcmp(ext, "mp4") == 0 || strcmp(ext, "jpg") == 0
+                || strcmp(ext, "jpeg") == 0|| strcmp(ext, "png") == 0
+    ));
 }
 
 bool isRegularFile(const char *path)
@@ -192,6 +172,10 @@ void command(const char *command, char *path)
             char *argv[] = {"unzip", src, "-d", tmpDir, NULL};
             execv("/bin/unzip", argv);
         }
+        else if (strcmp(command, "multi_zip") == 0) {
+            char *argv[] = {"zip", "-rm", "Lopyu_Stevany.zip", dirName[2], dirName[1], dirName[0], NULL};
+            execv("/bin/zip", argv);
+        }
         else if (strcmp(command, "download") == 0 || strcmp(command, "move") == 0) {
             // Parse data in path
             char arr[2][50];
@@ -210,20 +194,7 @@ void command(const char *command, char *path)
                 execv("/bin/mv", argv);
             }
         }
-        else if (strcmp(command, "multi_zip") == 0) {
-            // Parse data in path
-            char data[countFolder + 1][100];
-            strcpy(data[0], strtok(path, "|"));
-            for (int i = 1; i <= countFolder; i++) {
-                strcpy(data[i], strtok(NULL, "|"));
-            }
-            char *argv[] = {"zip", "-rm", data[3], data[2], data[1], data[0], NULL};
-            execv("/bin/zip", argv);
-        }
-        else {
-            printf("Unrecognized command\n");
-            exit(EXIT_FAILURE);
-        }
+        else exit(EXIT_FAILURE);
     } else {
         // this is parent
         while (wait(&status) > 0);
