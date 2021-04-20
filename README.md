@@ -60,6 +60,25 @@ Di soal ini, kami disuruh:
    3. Jika file berekstensi jpg, masukkan ke folder **Pyoto**.
 3. Jika telah selesai, hapus folder `tmpDir`.
 
+## Subsoal e
+### Penjelasan Soal
+Di soal ini, kami disuruh:
+* Program berjalan secara otomatis 6 jam sebelum waktu ulang tahun Stevany, 
+   yaitu: `09 April Pukul 22.22 WIB`
+
+### Penyelesaian Soal
+1. Buat program ini menjadi Daemon Process.
+2. Dapatkan tanggal dan waktu saat ini hingga ketelitian menit.
+3. Jika tanggal = `9`, bulan = `4`, jam = `16`, dan menit = `22`, jalankan program ini.
+
+## Subsoal f
+### Penjelasan Soal
+Di soal ini, kami disuruh:
+1. Pada `09 April Pukul 22.22 WIB`, zip **Musyik**, **Fylm**, dan **Pyoto** dengan nama `Lopyu_Stevany.zip`.
+2. Hapus folder **Musyik**, **Fylm**, dan **Pyoto**.
+
+### Penyelesaian Soal
+* Pada `09 April Pukul 22.22 WIB`, zip dan hapus ketiga folder ini dengan perintah `zip -rm Lopyu_Stevany.zip Musyik Fylm Pyoto`.
 <br><br>
 
 # Soal 2
