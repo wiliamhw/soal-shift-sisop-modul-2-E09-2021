@@ -6,7 +6,7 @@
 
 # Soal 1
 ## Info
-* Dikerjakan oleh **05111940000087** - William Handi Wijaya dan **05111940000212** - Fadhil Dimas Sucahyo.
+* Dikerjakan oleh 05111940000087 - William Handi Wijaya dan 05111940000212 - Fadhil Dimas Sucahyo.
 * Tidak boleh menggunakan: `system()`, *shell script*, `mkdir()`, dan `rename` (yang di bahasa C).
 * Menggunakan `fork` dan `exec`.
 * Tidak bolehh menggunakan `cron`.
@@ -52,12 +52,12 @@ Di soal ini, kami disuruh:
 Di soal ini, kami disuruh:
 * Pindahkan file ke folder yang sesuai.
 
-### Penyelesaian Soal
+## Penyelesaian Soal
 1. Scan file di dalam folder `tmpDir` dan dapatkan ekstensinya. 
 2. Untuk setiap ekstensi, lakukan perintah ini:
    1. Jika file berekstensi mp3, masukkan ke folder **Musyik**.
    2. Jika file berekstensi mp4, masukkan ke folder **Fylm**.
-   3. Jika file berekstensi jpg, masukkan ke folder **Pyoto**.
+   3. Jika file berekstensi jpg, png, atau jpeg, masukkan ke folder **Pyoto**.
 3. Jika telah selesai, hapus folder `tmpDir`.
 
 ## Subsoal e
@@ -205,9 +205,9 @@ Solusi ini di antara solusi no.1 dan no.2 pada subsoal d.
 3. Gambar berukuran (n%1000) + 50 pixel dengan n adalah detik Epoch Unix.
 
 ## Penyelesaian Soal
-1. Mengambil detik Epoch Unix `int epoch = ((int)time(NULL) % 1000) + 50;`.
-2. Membuat while looping yang berjalan setiap 5 detik dengan bantuan variabel time_t dan fungsi difftime().
-3. Fork child process.
+1. Membuat while looping yang berjalan setiap 5 detik dengan bantuan variabel time_t dan fungsi difftime().
+2. Fork child process.
+3. Mengambil detik Epoch Unix `int epoch = ((int)time(NULL) % 1000) + 50;`.
 4. Menjalankan perintah download `wget` dengan penamaan sesuai timestamp dengan bantuan fungsi strftime() dan execv() serta ditempatkan sesuai path direktori.
 5. While looping dibreak setelah download 10 gambar.
 
