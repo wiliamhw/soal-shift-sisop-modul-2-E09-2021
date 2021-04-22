@@ -6,7 +6,7 @@
 
 # Soal 1
 ## Info
-* Dikerjakan oleh **05111940000087** - William Handi Wijaya dan **05111940000212** - Fadhil Dimas Sucahyo.
+* Dikerjakan oleh 05111940000087 - William Handi Wijaya dan 05111940000212 - Fadhil Dimas Sucahyo.
 * Tidak boleh menggunakan: `system()`, *shell script*, `mkdir()`, dan `rename` (yang di bahasa C).
 * Menggunakan `fork` dan `exec`.
 * Tidak bolehh menggunakan `cron`.
@@ -52,12 +52,12 @@ Di soal ini, kami disuruh:
 Di soal ini, kami disuruh:
 * Pindahkan file ke folder yang sesuai.
 
-### Penyelesaian Soal
+## Penyelesaian Soal
 1. Scan file di dalam folder `tmpDir` dan dapatkan ekstensinya. 
 2. Untuk setiap ekstensi, lakukan perintah ini:
    1. Jika file berekstensi mp3, masukkan ke folder **Musyik**.
    2. Jika file berekstensi mp4, masukkan ke folder **Fylm**.
-   3. Jika file berekstensi jpg, masukkan ke folder **Pyoto**.
+   3. Jika file berekstensi jpg, png, atau jpeg, masukkan ke folder **Pyoto**.
 3. Jika telah selesai, hapus folder `tmpDir`.
 
 ## Subsoal e
