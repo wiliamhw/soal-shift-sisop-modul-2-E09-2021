@@ -69,10 +69,6 @@ int main(int argc, char *argv[]) {
                     char *arg1[]={"/bin/mkdir", dirname, NULL};
                     execv("/bin/mkdir", arg1);
                 }
-
-                char link[200];
-                int epoch = ((int)time(NULL) % 1000) + 50;
-                sprintf(link, "https://picsum.photos/%d", epoch);
                 
                 int limit_time_ph;
                 time_t prev_time_ph = time(NULL);
@@ -94,6 +90,10 @@ int main(int argc, char *argv[]) {
                         }
 
                         pid_t child_ph;
+
+                        char link[200];
+                        int epoch = ((int)time(NULL) % 1000) + 50;
+                        sprintf(link, "https://picsum.photos/%d", epoch);
 
                         if (!(child_ph = fork())) {
                             char filename[200];
