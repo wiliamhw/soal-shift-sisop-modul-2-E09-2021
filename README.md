@@ -52,7 +52,7 @@ Di soal ini, kami disuruh:
 Di soal ini, kami disuruh:
 * Pindahkan file ke folder yang sesuai.
 
-### Penyelesaian Soal
+## Penyelesaian Soal
 1. Scan file di dalam folder `tmpDir` dan dapatkan ekstensinya. 
 2. Untuk setiap ekstensi, lakukan perintah ini:
    1. Jika file berekstensi mp3, masukkan ke folder **Musyik**.
