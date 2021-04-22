@@ -200,9 +200,9 @@ Solusi ini di antara solusi no.1 dan no.2 pada subsoal d.
 
 ## Subsoal b
 ### Penjelasan Soal
-1. Mengisi setiap direktori dengan 10 gambar yang didownload dari https://picsum.photos/ setiap 5 detik.
-2. Setiap gambar diberi nama sesuai timestamp [YYYY-mm-dd_HH-ii-ss].
-3. Gambar berukuran (n%1000) + 50 pixel dengan n adalah detik Epoch Unix.
+1. Setiap gambar diberi nama sesuai timestamp [YYYY-mm-dd_HH-ii-ss].
+2. Gambar berukuran (n%1000) + 50 pixel dengan n adalah detik Epoch Unix.
+3. Mengisi setiap direktori dengan 10 gambar yang didownload dari https://picsum.photos/ setiap 5 detik.
 
 ## Penyelesaian Soal
 1. Mengambil detik Epoch Unix `int epoch = ((int)time(NULL) % 1000) + 50;`.
