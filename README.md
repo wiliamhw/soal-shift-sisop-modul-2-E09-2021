@@ -57,7 +57,7 @@ Di soal ini, kami disuruh:
 2. Untuk setiap ekstensi, lakukan perintah ini:
    1. Jika file berekstensi mp3, masukkan ke folder **Musyik**.
    2. Jika file berekstensi mp4, masukkan ke folder **Fylm**.
-   3. Jika file berekstensi jpg, masukkan ke folder **Pyoto**.
+   3. Jika file berekstensi jpg, png, atau jpeg, masukkan ke folder **Pyoto**.
 3. Jika telah selesai, hapus folder `tmpDir`.
 
 ## Subsoal e
