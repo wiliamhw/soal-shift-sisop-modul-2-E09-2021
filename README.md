@@ -133,9 +133,9 @@ Solusi ini di antara solusi no.1 dan no.2 pada subsoal d.
 3. Gambar berukuran (n%1000) + 50 pixel dengan n adalah detik Epoch Unix.
 
 ## Penyelesaian Soal
-1. Mengambil detik Epoch Unix `int epoch = ((int)time(NULL) % 1000) + 50;`.
-2. Membuat while looping yang berjalan setiap 5 detik dengan bantuan variabel time_t dan fungsi difftime().
-3. Fork child process.
+1. Membuat while looping yang berjalan setiap 5 detik dengan bantuan variabel time_t dan fungsi difftime().
+2. Fork child process.
+3. Mengambil detik Epoch Unix `int epoch = ((int)time(NULL) % 1000) + 50;`.
 4. Menjalankan perintah download `wget` dengan penamaan sesuai timestamp dengan bantuan fungsi strftime() dan execv() serta ditempatkan sesuai path direktori.
 5. While looping dibreak setelah download 10 gambar.
 
