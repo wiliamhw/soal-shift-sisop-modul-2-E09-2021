@@ -6,7 +6,7 @@
 
 # Soal 1
 ## Info
-* Dikerjakan oleh **05111940000087** - William Handi Wijaya dan **05111940000212** - Fadhil Dimas Sucahyo.
+* Dikerjakan oleh 05111940000087 - William Handi Wijaya dan 05111940000212 - Fadhil Dimas Sucahyo.
 * Tidak boleh menggunakan: `system()`, *shell script*, `mkdir()`, dan `rename` (yang di bahasa C).
 * Menggunakan `fork` dan `exec`.
 * Tidak bolehh menggunakan `cron`.
