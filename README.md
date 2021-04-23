@@ -251,3 +251,8 @@ Solusi ini di antara solusi no.1 dan no.2 pada subsoal d.
 4. Jika mode = 1, maka FILE `Killer.sh` dibuat pada saat Fork child process untuk membuat direktori.
 5. Jika mode = 2, hanya perlu pid dari process utama dan akan membuat FILE `Killer.sh` pada saat itu juga.
 <br><br>
+
+# Kendala
+Di soal no.1, terdapat beberapa kendala, yaitu:
+   1. Proses Daemon tidak terbuat.
+   2. Proses Daemon tidak dapat berjalan hingga selesai meskipun sudah terbuat.
